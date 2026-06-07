@@ -1,0 +1,14 @@
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.AssemblyInfoInputs.cache
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.AssemblyInfo.cs
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.csproj.CoreCompileInputs.cache
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\bin\Debug\net10.0\G-Sharp.exe
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\bin\Debug\net10.0\G-Sharp.deps.json
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\bin\Debug\net10.0\G-Sharp.runtimeconfig.json
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\bin\Debug\net10.0\G-Sharp.dll
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\bin\Debug\net10.0\G-Sharp.pdb
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.dll
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\refint\G-Sharp.dll
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.pdb
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\G-Sharp.genruntimeconfig.cache
+C:\Users\noahj\RiderProjects\G-Sharp\G-Sharp\obj\Debug\net10.0\ref\G-Sharp.dll
