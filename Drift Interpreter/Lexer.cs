@@ -167,6 +167,7 @@ public class Lexer
             "char" => new Token(TokenType.Char, text),
                 
             "if" => new Token(TokenType.If, text),
+            "elif" => new Token(TokenType.Elif, text),
             "else" => new Token(TokenType.Else, text),
             "while" => new Token(TokenType.While, text),
             "for" => new Token(TokenType.For, text),

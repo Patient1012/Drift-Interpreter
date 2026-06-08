@@ -6,10 +6,10 @@
 
         string code = 
                 """
-                var i32 x = 5;
-                if (x < 8)
+                var i15 x = 5;
+                while (x > 7)
                 {
-                    println("pass");
+                    println("hello");
                 }
                 """;
        

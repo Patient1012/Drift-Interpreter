@@ -22,14 +22,29 @@
         }
         else if (statement is IfStatement i)
         {
-            bool result = (bool)Evaluate(i.Condition);
-
-            if (result)
+            if ((bool)Evaluate(i.Condition))
             {
                 foreach (var stmt in i.ThenBranch)
-                {
                     Execute(stmt);
+
+                return;
+            }
+
+            foreach (var elif in i.ElifBranches)
+            {
+                if ((bool)Evaluate(elif.Condition))
+                {
+                    foreach (var stmt in elif.Body)
+                        Execute(stmt);
+
+                    return;
                 }
+            }
+
+            if (i.ElseBranch != null)
+            {
+                foreach (var stmt in i.ElseBranch)
+                    Execute(stmt);
             }
         }
     }

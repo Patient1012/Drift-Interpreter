@@ -61,15 +61,58 @@
         Advance(); // {
 
         List<Statement> thenBranch = new();
+        List<(Expression, List<Statement>)> elifBranches = new();
+        List<Statement>? elseBranch = null;
 
         while (!Match(TokenType.RightBrace))
         {
             thenBranch.Add(ParseStatement());
         }
 
-        Advance(); // }
+        Advance();
+        
+        while (Match(TokenType.Elif))
+        {
+            Advance(); // elif
 
-        return new IfStatement(condition, thenBranch, null);
+            Advance(); // (
+
+            Expression elifCondition = ParseExpression();
+
+            Advance(); // )
+
+            Advance(); // {
+
+            List<Statement> body = new();
+
+            while (!Match(TokenType.RightBrace))
+            {
+                body.Add(ParseStatement());
+            }
+
+            Advance(); // }
+
+            elifBranches.Add((elifCondition, body));
+        }
+        if (Match(TokenType.Else))
+        {
+            Advance(); // else
+            Advance(); // {
+
+            elseBranch = new List<Statement>();
+
+            while (!Match(TokenType.RightBrace))
+            {
+                elseBranch.Add(ParseStatement());
+            }
+
+            Advance(); // }
+        }
+        
+        
+        Console.WriteLine($"Leaving ParseIf at {_position}, token={_tokens[_position].Type}");
+
+        return new IfStatement(condition, thenBranch, elifBranches, elseBranch);
     }
 
     private Expression ParseExpression()
@@ -132,6 +175,9 @@
     }
     private Token Advance()
     {
+        if (_position >= _tokens.Count)
+            throw new Exception("Parser advanced past EOF");
+
         return _tokens[_position++];
     }
 
@@ -142,6 +188,6 @@
 
     private bool IsAtEnd()
     {
-        return _tokens[_position].Type == TokenType.EOF;
+        return _position >= _tokens.Count || _tokens[_position].Type == TokenType.EOF;
     }
 }

@@ -37,6 +37,7 @@ public enum TokenType
     RightBrace,
         
     If,
+    Elif,
     Else,
     While,
     For,
