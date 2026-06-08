@@ -20,6 +20,18 @@
         {
             Console.WriteLine(Evaluate(p.Value));
         }
+        else if (statement is IfStatement i)
+        {
+            bool result = (bool)Evaluate(i.Condition);
+
+            if (result)
+            {
+                foreach (var stmt in i.ThenBranch)
+                {
+                    Execute(stmt);
+                }
+            }
+        }
     }
     private object Evaluate(Expression expr)
     {
@@ -38,6 +50,12 @@
             {
                 "+" => left + right,
                 "-" => left - right,
+                "<"  => left < right,
+                ">"  => left > right,
+                "<=" => left <= right,
+                ">=" => left >= right,
+                "==" => left == right,
+                "!=" => left != right,
                 _ => throw new Exception($"Unknown operator {b.Operator}")
             };
         }

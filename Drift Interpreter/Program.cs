@@ -7,11 +7,10 @@
         string code = 
                 """
                 var i32 x = 5;
-                var i32 y = x + 3;
-                
-                println(x);
-                println(y);
-                println(10 + 2);
+                if (x < 8)
+                {
+                    println("pass");
+                }
                 """;
        
         //  Lexer

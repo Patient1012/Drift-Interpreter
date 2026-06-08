@@ -47,6 +47,30 @@
 
         return new PrintStatement(value);
     }
+    
+    private IfStatement ParseIf()
+    {
+        Advance(); // if
+
+        Advance(); // (
+
+        Expression condition = ParseExpression();
+
+        Advance(); // )
+
+        Advance(); // {
+
+        List<Statement> thenBranch = new();
+
+        while (!Match(TokenType.RightBrace))
+        {
+            thenBranch.Add(ParseStatement());
+        }
+
+        Advance(); // }
+
+        return new IfStatement(condition, thenBranch, null);
+    }
 
     private Expression ParseExpression()
     {
@@ -54,7 +78,13 @@
 
         while (_position < _tokens.Count &&
                (_tokens[_position].Type == TokenType.Plus ||
-                _tokens[_position].Type == TokenType.Minus))
+                _tokens[_position].Type == TokenType.Minus ||
+                _tokens[_position].Type == TokenType.Less ||
+                _tokens[_position].Type == TokenType.Greater ||
+                _tokens[_position].Type == TokenType.LessEqual ||
+                _tokens[_position].Type == TokenType.GreaterEqual ||
+                _tokens[_position].Type == TokenType.EqualEqual ||
+                _tokens[_position].Type == TokenType.NotEqual))
         {
             string op = Advance().Value;
 
@@ -71,6 +101,9 @@
 
         if (token.Type == TokenType.Number)
             return new LiteralExpression(int.Parse(token.Value));
+        
+        if (token.Type == TokenType.String)
+            return new LiteralExpression(token.Value);
 
         if (token.Type == TokenType.Identifier)
             return new VariableExpression(token.Value);
@@ -90,7 +123,12 @@
             return ParsePrintln();
         }
 
-        throw new Exception("Unknown statement");
+        if (Match(TokenType.If))
+        {
+            return ParseIf();
+        }
+
+        throw new Exception($"Unknown statement: {_tokens[_position].Type}");
     }
     private Token Advance()
     {

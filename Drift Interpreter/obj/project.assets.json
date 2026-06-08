@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\noahj\\RiderProjects\\G-Sharp\\G-Sharp Interpreter\\G-Sharp Interpreter.csproj",
-      "projectName": "G-Sharp Interpreter",
-      "projectPath": "C:\\Users\\noahj\\RiderProjects\\G-Sharp\\G-Sharp Interpreter\\G-Sharp Interpreter.csproj",
+      "projectUniqueName": "C:\\Users\\noahj\\RiderProjects\\G-Sharp\\Drift Interpreter\\Drift Interpreter.csproj",
+      "projectName": "Drift Interpreter",
+      "projectPath": "C:\\Users\\noahj\\RiderProjects\\G-Sharp\\Drift Interpreter\\Drift Interpreter.csproj",
       "packagesPath": "C:\\Users\\noahj\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\noahj\\RiderProjects\\G-Sharp\\G-Sharp Interpreter\\obj\\",
+      "outputPath": "C:\\Users\\noahj\\RiderProjects\\G-Sharp\\Drift Interpreter\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\noahj\\AppData\\Roaming\\NuGet\\NuGet.Config"
