@@ -1,1 +1,1 @@
-- [x] print strings
+- [ ] print strings
