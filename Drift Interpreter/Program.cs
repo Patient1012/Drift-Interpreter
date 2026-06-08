@@ -6,11 +6,8 @@
 
         string code = 
                 """
-                var i15 x = 5;
-                while (x > 7)
-                {
-                    println("hello");
-                }
+                const i32 x = 69;
+                println(x)
                 """;
        
         //  Lexer

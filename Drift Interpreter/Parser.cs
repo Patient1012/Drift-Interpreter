@@ -2,7 +2,6 @@
 {
     private List<Token> _tokens;
     private int _position;
-
     public Parser(List<Token> tokens)
     {
         _tokens = tokens;
@@ -10,39 +9,37 @@
     public List<Statement> Parse()
     {
         List<Statement> statements = new();
-
         while (!IsAtEnd())
         {
             statements.Add(ParseStatement());
         }
-
         return statements;
     }
     private VarDeclaration ParseVarDeclaration()
     {
-        Advance(); // var
+
+        Token keyword = Advance(); // var or const
+        bool isConst = keyword.Type == TokenType.Const;
 
         Token type = Advance(); // i32
         Token name = Advance(); // x
 
         Advance(); // =
-        
-        Expression value = ParseExpression();
-        
+
+        Expression valueExpression = ParseExpression();
+
         Advance(); // ;
 
-        return new VarDeclaration(name.Value, value);
+        return new VarDeclaration(name.Value, valueExpression, type.Value, isConst);
     }
     private PrintStatement ParsePrintln()
     {
         Advance(); // println
-
         Advance(); // (
 
         Expression value = ParseExpression();
 
         Advance(); // )
-
         Advance(); // ;
 
         return new PrintStatement(value);
@@ -51,13 +48,11 @@
     private IfStatement ParseIf()
     {
         Advance(); // if
-
         Advance(); // (
 
         Expression condition = ParseExpression();
 
         Advance(); // )
-
         Advance(); // {
 
         List<Statement> thenBranch = new();
@@ -74,13 +69,11 @@
         while (Match(TokenType.Elif))
         {
             Advance(); // elif
-
             Advance(); // (
 
             Expression elifCondition = ParseExpression();
 
             Advance(); // )
-
             Advance(); // {
 
             List<Statement> body = new();
@@ -89,9 +82,7 @@
             {
                 body.Add(ParseStatement());
             }
-
             Advance(); // }
-
             elifBranches.Add((elifCondition, body));
         }
         if (Match(TokenType.Else))
@@ -108,11 +99,43 @@
 
             Advance(); // }
         }
-        
-        
         Console.WriteLine($"Leaving ParseIf at {_position}, token={_tokens[_position].Type}");
-
         return new IfStatement(condition, thenBranch, elifBranches, elseBranch);
+    }
+    private WhileStatement ParseWhile()
+    {
+        Advance(); // while
+
+        Advance(); // (
+
+        Expression condition = ParseExpression();
+
+        Advance(); // )
+
+        Advance(); // {
+
+        List<Statement> body = new();
+
+        while (!Match(TokenType.RightBrace))
+        {
+            body.Add(ParseStatement());
+        }
+
+        Advance(); // }
+
+        return new WhileStatement(condition, body);
+    }
+    private Statement ParseAssignment()
+    {
+        Token name = Advance(); // identifier
+
+        Advance(); // =
+
+        Expression value = ParseExpression();
+
+        Advance(); // ;
+
+        return new AssignmentStatement(name.Value, value);
     }
 
     private Expression ParseExpression()
@@ -130,9 +153,7 @@
                 _tokens[_position].Type == TokenType.NotEqual))
         {
             string op = Advance().Value;
-
             Expression right = ParsePrimary();
-
             left = new BinaryExpression(left, op, right);
         }
 
@@ -141,13 +162,12 @@
     private Expression ParsePrimary()
     {
         Token token = Advance();
-
-        if (token.Type == TokenType.Number)
+        if (token.Type == TokenType.Number) 
             return new LiteralExpression(int.Parse(token.Value));
         
         if (token.Type == TokenType.String)
             return new LiteralExpression(token.Value);
-
+        
         if (token.Type == TokenType.Identifier)
             return new VariableExpression(token.Value);
 
@@ -156,21 +176,35 @@
     private Statement ParseStatement()
     {
         Console.WriteLine($"Position={_position}, Token={_tokens[_position].Type}");
+        if (Match(TokenType.Identifier))
+        {
+            return ParseAssignment();
+        }
         if (Match(TokenType.Var))
         {
             return ParseVarDeclaration();
         }
-        
+
+        if (Match(TokenType.Const))
+        {
+            return ParseVarDeclaration();
+        }
         if (Match(TokenType.Println))
         {
             return ParsePrintln();
         }
-
         if (Match(TokenType.If))
         {
             return ParseIf();
         }
-
+        if (Match(TokenType.While))
+        {
+            return ParseWhile();
+        }
+        if (Match(TokenType.For))
+        {
+            return ParseWhile(); //ParseFor();
+        }
         throw new Exception($"Unknown statement: {_tokens[_position].Type}");
     }
     private Token Advance()

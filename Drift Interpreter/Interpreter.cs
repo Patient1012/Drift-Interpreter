@@ -1,6 +1,6 @@
 ﻿public class Interpreter
 {
-    private Dictionary<string, object> variables = new();
+    private Dictionary<string, Variable> variables = new();
 
     public void Run(List<Statement> statements)
     {
@@ -9,14 +9,10 @@
             Execute(stmt);
         }
     }
+
     private void Execute(Statement statement)
     {
-        if (statement is VarDeclaration v)
-        {
-            variables[v.Name] = Evaluate(v.Value);
-            Console.WriteLine($"{v.Name} = {variables[v.Name]}");
-        }
-        else if (statement is PrintStatement p)
+        if (statement is PrintStatement p)
         {
             Console.WriteLine(Evaluate(p.Value));
         }
@@ -26,7 +22,6 @@
             {
                 foreach (var stmt in i.ThenBranch)
                     Execute(stmt);
-
                 return;
             }
 
@@ -36,7 +31,6 @@
                 {
                     foreach (var stmt in elif.Body)
                         Execute(stmt);
-
                     return;
                 }
             }
@@ -47,14 +41,28 @@
                     Execute(stmt);
             }
         }
+        else if (statement is WhileStatement w)
+        {
+            while ((bool)Evaluate(w.Condition))
+            {
+                foreach (var stmt in w.Body)
+                    Execute(stmt);
+            }
+        }
+        else if (statement is VarDeclaration v)
+        {
+            variables[v.Name] = new Variable(Evaluate(v.Value), v.IsConst);
+
+        }
     }
+
     private object Evaluate(Expression expr)
     {
         if (expr is LiteralExpression l)
             return l.Value;
 
         if (expr is VariableExpression v)
-            return variables[v.Name];
+            return variables[v.Name].Value;
 
         if (expr is BinaryExpression b)
         {
