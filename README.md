@@ -4,4 +4,4 @@ The first interpreter has been mostly written with ChatGPT but has been extensiv
 like in language regarding syntax. It is not designed to be the best and have the most efficient interpreter but is just a passion project.
 
 ## Installation
-The first interpreter is NOT currently ready and will not work.
+The first interpreter is **NOT** currently ready and will not work.
