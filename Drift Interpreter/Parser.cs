@@ -200,6 +200,7 @@
 
     private Expression ParseExpression()
     {
+        Console.WriteLine($"[EXPR] {_tokens[_position].Type}");
         Console.WriteLine($"ParseStatement: Position={_position}, Token={_tokens[_position].Type}");
         Expression left = ParsePrimary();
 
@@ -223,48 +224,52 @@
     private Expression ParsePrimary()
     {
         Token token = Advance();
+
         if (token.Type == TokenType.Number)
-        {
             return new LiteralExpression(int.Parse(token.Value));
-        }
+
         if (token.Type == TokenType.String)
-        {
             return new LiteralExpression(token.Value);
-        }
+
         if (token.Type == TokenType.Identifier)
         {
-            return new VariableExpression(token.Value);
-        }
-        if (token.Type == TokenType.Identifier)
-        {
-            if (_position < _tokens.Count && _tokens[_position].Type == TokenType.LeftParen)
+            if (_position < _tokens.Count &&
+                _tokens[_position].Type == TokenType.LeftParen)
             {
                 return ParseCall(token.Value);
             }
+
             return new VariableExpression(token.Value);
         }
+
         throw new Exception("Unexpected token in expression");
     }
     private CallExpression ParseCall(string name)
     {
-        Advance(); // (
+        Advance(); // consume '('
 
         List<Expression> arguments = new();
 
-        while (!Match(TokenType.RightParen))
+        if (!Match(TokenType.RightParen))
         {
-            arguments.Add(ParseExpression());
-
-            if (Match(TokenType.Comma))
-                Advance();
+            do
+            {
+                arguments.Add(ParseExpression());
+            }
+            while (Match(TokenType.Comma) && Advance() != null);
         }
 
-        Advance(); // )
+        Advance(); // consume ')'
 
         return new CallExpression(name, arguments);
     }
     private Statement ParseStatement()
     {
+        if (_tokens[_position].Type == TokenType.Comma)
+        {
+            throw new Exception("Parser desync: comma reached statement level");
+        }
+        Console.WriteLine($"STATEMENT: {_tokens[_position].Type} at {_position}");
         Console.WriteLine($"ParseStatement: Position={_position}, Token={_tokens[_position].Type}");
         if (_position + 1 < _tokens.Count &&
             _tokens[_position].Type == TokenType.Identifier &&
@@ -295,7 +300,7 @@
         }
         if (Match(TokenType.For))
         {
-            return ParseWhile(); //ParseFor();
+            return ParseWhile();
         }
         if (Match(TokenType.Return))
         {
