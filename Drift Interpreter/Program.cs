@@ -5,12 +5,11 @@
 
         string code = 
                 """
-                i32 add(i32 a, i32 b)
+                void greet()
                 {
-                    return a + b;
+                    println("hello");
                 }
                 
-                println(add(2, 3));
                 """;
        
         //  Lexer

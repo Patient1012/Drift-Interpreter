@@ -5,12 +5,9 @@
     public List<string> Parameters;
     public List<Statement> Body;
 
-    public FunctionDeclaration(
-        string name,
-        string returnType,
-        List<string> parameters,
-        List<Statement> body)
+    public FunctionDeclaration(string name, string returnType, List<string> parameters, List<Statement> body)
     {
+        new FunctionDeclaration(name, returnType.Value, parameters, body);
         Name = name;
         ReturnType = returnType;
         Parameters = parameters;

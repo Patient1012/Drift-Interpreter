@@ -22,6 +22,7 @@ public enum TokenType
     Str,
     Bool,
     Char,
+    Void,
 
     Equals,
     Semicolon,

@@ -107,11 +107,8 @@
             for (int i = 0; i < function.Parameters.Count; i++)
             {
                 variables[function.Parameters[i]] =
-                    new Variable(
-                        Evaluate(c.Arguments[i]),
-                        false);
+                    new Variable(Evaluate(c.Arguments[i]), false);
             }
-
             try
             {
                 foreach (var stmt in function.Body)
