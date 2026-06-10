@@ -313,15 +313,19 @@ Scope rules are planned for implementation.
 Arrays are initiated with a specific size. The size cannot be changed after initialisation.
 Arrays are declared this way:
 
-`mutability_type primitive_type[x,y,z];`
+`mutability_type primitive_type array_name[x,y,z];`
 
 or 
 
-`mutability_type primitive_type[x,y,z] = {{},{}};`
+`mutability_type primitive_type array_name[x,y,z] = {{},{}};`
+
+Can be edited with:
+
+`arrayname[] = {};`
 
 Example:
 
-`var i32[2,3] = {12,3},{6,3},{8,3}};`
+`var i32 prices[2,3] = {12,3},{6,3},{8,3}};`
 
 ---
 # Error Handling
