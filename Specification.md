@@ -310,6 +310,7 @@ Scope rules are planned for implementation.
 ---
 # Arrays
 
+Arrays are initiated with a specific size. The size cannot be changed after initialisation.
 Arrays are declared this way:
 
 `mutability_type primitive_type[x,y,z];`
