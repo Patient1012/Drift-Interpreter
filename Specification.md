@@ -8,6 +8,18 @@ Drift is a statically and explicitly typed programming language designed for cla
 
 Source files use the `.drf` extension.
 
+# Design Principles
+
+Drift is designed around the following principles:
+
+- Strong static typing
+- Explicit declarations
+- Predictable behavior
+- Minimal syntax
+- C-style control flow
+- Readable source code
+- Zero implicit type conversions
+
 ---
 
 # Basic Syntax
