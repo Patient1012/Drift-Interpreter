@@ -1,6 +1,7 @@
 ﻿public class Interpreter
 {
     private Dictionary<string, Variable> variables = new();
+    private Dictionary<string, FunctionDeclaration> functions = new();
 
     public void Run(List<Statement> statements)
     {
@@ -8,8 +9,14 @@
         {
             Execute(stmt);
         }
+        foreach (var pair in variables)
+        {
+            if (!pair.Value.IsConst && !pair.Value.WasModified)
+            {
+                throw new Exception($"Warning: Variable '{pair.Key}' was never modified.");
+            }
+        }
     }
-
     private void Execute(Statement statement)
     {
         if (statement is PrintStatement p)
@@ -54,6 +61,14 @@
             variables[v.Name] = new Variable(Evaluate(v.Value), v.IsConst);
 
         }
+        else if (statement is FunctionDeclaration f)
+        {
+            functions[f.Name] = f;
+        }
+        else if (statement is ReturnStatement r)
+        {
+            throw new ReturnException(Evaluate(r.Value));
+        }
     }
 
     private object Evaluate(Expression expr)
@@ -81,6 +96,38 @@
                 "!=" => left != right,
                 _ => throw new Exception($"Unknown operator {b.Operator}")
             };
+        }
+        if (expr is CallExpression c)
+        {
+            FunctionDeclaration function = functions[c.Name];
+
+            var oldVariables =
+                new Dictionary<string, Variable>(variables);
+
+            for (int i = 0; i < function.Parameters.Count; i++)
+            {
+                variables[function.Parameters[i]] =
+                    new Variable(
+                        Evaluate(c.Arguments[i]),
+                        false);
+            }
+
+            try
+            {
+                foreach (var stmt in function.Body)
+                {
+                    Execute(stmt);
+                }
+            }
+            catch (ReturnException ret)
+            {
+                variables = oldVariables;
+                return ret.Value;
+            }
+
+            variables = oldVariables;
+
+            return null;
         }
 
         throw new Exception("Unknown expression type");

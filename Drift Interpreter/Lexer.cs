@@ -123,6 +123,10 @@ public class Lexer
                 case ')':
                     tokens.Add(new Token(TokenType.RightParen, ")"));
                     break;
+                
+                case ',':
+                    tokens.Add(new Token(TokenType.Comma, ","));
+                    break;
 
                 default:
                     throw new Exception($"Unexpected character: {current}");

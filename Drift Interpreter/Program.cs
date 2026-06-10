@@ -1,13 +1,16 @@
 ﻿class Program
 {
-    
     static void Main(string[] args)
     {
 
         string code = 
                 """
-                const i32 x = 69;
-                println(x)
+                i32 add(i32 a, i32 b)
+                {
+                    return a + b;
+                }
+                
+                println(add(2, 3));
                 """;
        
         //  Lexer
