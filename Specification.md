@@ -311,9 +311,13 @@ Scope rules are planned for implementation.
 # Arrays
 
 Arrays are declared this way:
+
 `mutability_type primitive_type[x,y,z];`
+
 or 
+
 `mutability_type primitive_type[x,y,z] = {{},{}};`
+
 
 
 # Error Handling
