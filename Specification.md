@@ -318,8 +318,10 @@ or
 
 `mutability_type primitive_type[x,y,z] = {{},{}};`
 
+example:
+`var i32[2,3] = {12,3},{6,3},{8,3}}`
 
-
+---
 # Error Handling
 
 Current implementation uses runtime exceptions.
