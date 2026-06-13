@@ -34,8 +34,8 @@
     }
     private FunctionDeclaration ParseFunction()
     {
-        Token returnType = Advance();
-        Token name = Advance();
+        Token returnType = Advance(); // i32, void etc
+        Token name = Advance(); // name of the function
 
         Advance(); // (
 
@@ -50,7 +50,9 @@
             parameters.Add(paramName.Value);
 
             if (Match(TokenType.Comma))
+            {
                 Advance();
+            }
         }
 
         Advance(); // )
@@ -66,17 +68,13 @@
 
         Advance(); // }
 
-        return new FunctionDeclaration(
-            name.Value,
-            returnType.Value,
-            parameters,
-            body);
+        return new FunctionDeclaration(name.Value, returnType.Value, parameters, body);
     }
     private ReturnStatement ParseReturn()
     {
         Advance(); // return
 
-        Expression value = ParseExpression();
+        Expression value = ParseExpression(); // what you are returning
 
         Advance(); // ;
 
@@ -91,7 +89,7 @@
         Advance(); // println
         Advance(); // (
 
-        Expression value = ParseExpression();
+        Expression value = ParseExpression(); // contents of the print statement
 
         Advance(); // )
         Advance(); // ;
@@ -104,7 +102,7 @@
         Advance(); // if
         Advance(); // (
 
-        Expression condition = ParseExpression();
+        Expression condition = ParseExpression(); // condition of the statement
 
         Advance(); // )
         Advance(); // {
@@ -117,7 +115,6 @@
         {
             thenBranch.Add(ParseStatement());
         }
-
         Advance();
         
         while (Match(TokenType.Elif))
@@ -125,7 +122,7 @@
             Advance(); // elif
             Advance(); // (
 
-            Expression elifCondition = ParseExpression();
+            Expression elifCondition = ParseExpression(); // condition of the statement
 
             Advance(); // )
             Advance(); // {
@@ -150,7 +147,6 @@
             {
                 elseBranch.Add(ParseStatement());
             }
-
             Advance(); // }
         }
         Console.WriteLine($"Leaving ParseIf at {_position}, token={_tokens[_position].Type}");
@@ -162,39 +158,34 @@
 
         Advance(); // (
 
-        Expression condition = ParseExpression();
+        Expression condition = ParseExpression(); // condition of the statement
 
         Advance(); // )
-
+        
         Advance(); // {
-
+        
         List<Statement> body = new();
-
         while (!Match(TokenType.RightBrace))
         {
             body.Add(ParseStatement());
         }
-
         Advance(); // }
-
         return new WhileStatement(condition, body);
     }
     private Statement ParseAssignment()
     {
         Token name = Advance();
-
         if (!Match(TokenType.Equals))
+        {
             throw new Exception("Expected '=' in assignment");
-
+        }
         Advance(); // =
-
         Expression value = ParseExpression();
-
         if (!Match(TokenType.Semicolon))
+        {
             throw new Exception("Expected ';' after assignment");
-
+        }
         Advance(); // ;
-
         return new AssignmentStatement(name.Value, value);
     }
 
@@ -218,7 +209,6 @@
             Expression right = ParsePrimary();
             left = new BinaryExpression(left, op, right);
         }
-
         return left;
     }
     private Expression ParsePrimary()
@@ -226,22 +216,21 @@
         Token token = Advance();
 
         if (token.Type == TokenType.Number)
+        {
             return new LiteralExpression(int.Parse(token.Value));
-
+        }
         if (token.Type == TokenType.String)
+        {
             return new LiteralExpression(token.Value);
-
+        }
         if (token.Type == TokenType.Identifier)
         {
-            if (_position < _tokens.Count &&
-                _tokens[_position].Type == TokenType.LeftParen)
+            if (_position < _tokens.Count && _tokens[_position].Type == TokenType.LeftParen)
             {
                 return ParseCall(token.Value);
             }
-
             return new VariableExpression(token.Value);
         }
-
         throw new Exception("Unexpected token in expression");
     }
     private CallExpression ParseCall(string name)
@@ -258,7 +247,6 @@
             }
             while (Match(TokenType.Comma) && Advance() != null);
         }
-
         Advance(); // consume ')'
 
         return new CallExpression(name, arguments);
@@ -271,8 +259,7 @@
         }
         Console.WriteLine($"STATEMENT: {_tokens[_position].Type} at {_position}");
         Console.WriteLine($"ParseStatement: Position={_position}, Token={_tokens[_position].Type}");
-        if (_position + 1 < _tokens.Count &&
-            _tokens[_position].Type == TokenType.Identifier &&
+        if (_position + 1 < _tokens.Count && _tokens[_position].Type == TokenType.Identifier &&
             _tokens[_position + 1].Type == TokenType.Equals)
         {
             return ParseAssignment();
@@ -316,16 +303,15 @@
     private Token Advance()
     {
         if (_position >= _tokens.Count)
+        {
             throw new Exception("Parser advanced past EOF");
-
+        }
         return _tokens[_position++];
     }
-
     private bool Match(TokenType type)
     {
         return _tokens[_position].Type == type;
     }
-
     private bool IsAtEnd()
     {
         return _position >= _tokens.Count || _tokens[_position].Type == TokenType.EOF;
