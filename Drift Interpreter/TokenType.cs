@@ -8,7 +8,7 @@ public enum TokenType
     Var,
     Const,
     Println,
-    //Readln,
+    Readln,
 
     I8,
     I16,
@@ -29,23 +29,30 @@ public enum TokenType
 
     LeftParen,
     RightParen,
-    
+
     LeftBrace,
     RightBrace,
-        
+
     Plus,
     Minus,
     Star,
     Slash,
-        
+
     If,
     Elif,
     Else,
+
+    Switch,
+    Case,
+
     While,
     For,
+    Do,
+    Break,
+
     Return,
     Comma,
-        
+
     EqualEqual,
     NotEqual,
 

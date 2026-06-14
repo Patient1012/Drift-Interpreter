@@ -8,7 +8,7 @@ public class Lexer
     {
         _source = source;
     }
-        
+
     private char Peek()
     {
         if (_position + 1 >= _source.Length)
@@ -75,7 +75,7 @@ public class Lexer
                 case '}':
                     tokens.Add(new Token(TokenType.RightBrace, "}"));
                     break;
-                    
+
                 case '=':
                     if (Peek() == '=')
                     {
@@ -87,7 +87,7 @@ public class Lexer
                         tokens.Add(new Token(TokenType.Equals, "="));
                     }
                     break;
-                    
+
                 case '>':
                     if (Peek() == '=')
                     {
@@ -123,7 +123,7 @@ public class Lexer
                 case ')':
                     tokens.Add(new Token(TokenType.RightParen, ")"));
                     break;
-                
+
                 case ',':
                     tokens.Add(new Token(TokenType.Comma, ","));
                     break;
@@ -143,7 +143,7 @@ public class Lexer
     {
         int start = _position;
 
-        while (_position < _source.Length && 
+        while (_position < _source.Length &&
                (char.IsLetterOrDigit(_source[_position])
                 || _source[_position] == '_'))
         {
@@ -156,6 +156,7 @@ public class Lexer
             "var" => new Token(TokenType.Var, text),
             "const" => new Token(TokenType.Const, text),
             "println" => new Token(TokenType.Println, text),
+            "readln" => new Token(TokenType.Readln, text);
 
             "i8" => new Token(TokenType.I8, text),
             "i16" => new Token(TokenType.I16, text),
@@ -169,12 +170,19 @@ public class Lexer
             "str" => new Token(TokenType.Str, text),
             "bool" => new Token(TokenType.Bool, text),
             "char" => new Token(TokenType.Char, text),
-                
+
             "if" => new Token(TokenType.If, text),
             "elif" => new Token(TokenType.Elif, text),
             "else" => new Token(TokenType.Else, text),
+            "switch" => new Token(TokenType.Switch,text),
+            "case" => new Token(TokenType.Case, text)
+
+
             "while" => new Token(TokenType.While, text),
             "for" => new Token(TokenType.For, text),
+            "do" => new Token(TokenType.Do, text)
+            "break" => new Token(TokenType.Break, text),
+
             "return" => new Token(TokenType.Return, text),
 
             _ => new Token(TokenType.Identifier, text)
@@ -214,5 +222,5 @@ public class Lexer
 
         return new Token(TokenType.String, value);
     }
-        
+
 }
