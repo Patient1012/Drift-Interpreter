@@ -123,9 +123,14 @@
             catch (ReturnException ret)
             {
                 variables = oldVariables;
+                if (function.ReturnType == "void")
+                {
+                    throw new Exception(
+                        $"Void function '{function.Name}' cannot return a value.");
+                }
                 return ret.Value;
             }
-
+            
             variables = oldVariables;
 
             return null;

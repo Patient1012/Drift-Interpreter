@@ -90,12 +90,27 @@
 
         return new ReturnStatement(value);
     }
+    private static readonly HashSet<TokenType> TypeTokens = new()
+    {
+        // All the different return types
+        TokenType.I8,
+        TokenType.I16,
+        TokenType.I32,
+        TokenType.I64,
+
+        TokenType.F16,
+        TokenType.F32,
+        TokenType.F64,
+
+        TokenType.Bool,
+        TokenType.Char,
+        TokenType.Str,
+        TokenType.Void
+    };
+
     private bool IsType(Token token)
     {
-        return token.Type == TokenType.I32 ||
-               token.Type == TokenType.Bool ||
-               token.Type == TokenType.Str ||
-               token.Type == TokenType.Void;
+        return TypeTokens.Contains(token.Type);
     }
     private PrintStatement ParsePrintln()
     {

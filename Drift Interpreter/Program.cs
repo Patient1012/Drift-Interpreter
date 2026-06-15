@@ -5,11 +5,11 @@
 
         string code = 
                 """
-                void greet()
+                f16 greet()
                 {
+                    const i32 x = 10;
                     println("hello");
                 }
-                greet();
                 """;
        
         //  Lexer
