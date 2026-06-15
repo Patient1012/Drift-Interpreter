@@ -1,6 +1,6 @@
 ## Feature to do list
 
-- [ ] const values
+- [x] const values
 - [ ] store strings
 - [ ] print strings
 - [ ] store chars
@@ -9,7 +9,7 @@
 - [ ] sqrt() for square root
 
 # Methods
-- [ ] void methods
+- [x] void methods
 - [ ] int type methods
 - [ ] float type methods
 - [ ] string type methods
