@@ -1,11 +1,9 @@
 ```
-{
     ____       _ ______
    / __ \_____(_) __/ /_
   / / / / ___/ / /_/ __/
  / /_/ / /  / / __/ /_
 /_____/_/  /_/_/  \__/
-}
 ```
 ## About
 Drift is a personal vibe coded programing language. It takes inspiration from C and modern languages like rust or zig. The first interpreter is written in C# but I plan to make a compiler written in C in the future.
