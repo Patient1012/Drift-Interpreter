@@ -61,6 +61,10 @@
             variables[v.Name] = new Variable(Evaluate(v.Value), v.IsConst);
 
         }
+        else if (statement is CallStatement c)
+        {
+            Evaluate(c.Call);
+        }
         else if (statement is FunctionDeclaration f)
         {
             functions[f.Name] = f;

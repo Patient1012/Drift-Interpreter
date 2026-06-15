@@ -156,7 +156,7 @@ public class Lexer
             "var" => new Token(TokenType.Var, text),
             "const" => new Token(TokenType.Const, text),
             "println" => new Token(TokenType.Println, text),
-            "readln" => new Token(TokenType.Readln, text);
+            "readln" => new Token(TokenType.Readln, text),
 
             "i8" => new Token(TokenType.I8, text),
             "i16" => new Token(TokenType.I16, text),
@@ -170,17 +170,18 @@ public class Lexer
             "str" => new Token(TokenType.Str, text),
             "bool" => new Token(TokenType.Bool, text),
             "char" => new Token(TokenType.Char, text),
+            "void" => new Token(TokenType.Void, text),
 
             "if" => new Token(TokenType.If, text),
             "elif" => new Token(TokenType.Elif, text),
             "else" => new Token(TokenType.Else, text),
             "switch" => new Token(TokenType.Switch,text),
-            "case" => new Token(TokenType.Case, text)
+            "case" => new Token(TokenType.Case, text),
 
 
             "while" => new Token(TokenType.While, text),
             "for" => new Token(TokenType.For, text),
-            "do" => new Token(TokenType.Do, text)
+            "do" => new Token(TokenType.Do, text),
             "break" => new Token(TokenType.Break, text),
 
             "return" => new Token(TokenType.Return, text),

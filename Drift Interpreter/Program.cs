@@ -9,7 +9,7 @@
                 {
                     println("hello");
                 }
-                
+                greet();
                 """;
        
         //  Lexer

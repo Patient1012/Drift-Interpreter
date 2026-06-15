@@ -15,6 +15,16 @@
         }
         return statements;
     }
+    private Statement ParseCallStatement()
+    {
+        Token name = Advance();
+
+        CallExpression call = ParseCall(name.Value);
+
+        Advance(); // ;
+
+        return new CallStatement(call);
+    }
     private VarDeclaration ParseVarDeclaration()
     {
 
@@ -82,7 +92,10 @@
     }
     private bool IsType(Token token)
     {
-        return token.Type == TokenType.I32 || token.Type == TokenType.Bool || token.Type == TokenType.Str;
+        return token.Type == TokenType.I32 ||
+               token.Type == TokenType.Bool ||
+               token.Type == TokenType.Str ||
+               token.Type == TokenType.Void;
     }
     private PrintStatement ParsePrintln()
     {
@@ -263,6 +276,11 @@
             _tokens[_position + 1].Type == TokenType.Equals)
         {
             return ParseAssignment();
+        }
+        if (_position + 1 < _tokens.Count && _tokens[_position].Type == TokenType.Identifier &&
+            _tokens[_position + 1].Type == TokenType.LeftParen)
+        {
+            return ParseCallStatement();
         }
         if (Match(TokenType.Var))
         {
