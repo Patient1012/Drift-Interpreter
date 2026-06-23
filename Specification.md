@@ -200,6 +200,16 @@ else
 }
 ```
 
+## Switch case
+
+```drift
+switch(x)
+{
+    case (10): return case; 
+    case (12): return 12;
+    default: return 0;
+}
+
 ---
 
 # Loops
