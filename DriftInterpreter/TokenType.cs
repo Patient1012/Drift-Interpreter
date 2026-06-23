@@ -32,6 +32,9 @@ public enum TokenType
 
     LeftBrace,
     RightBrace,
+    
+    LeftSquareBrace,
+    RightSquareBrace,
 
     Plus,
     Minus,

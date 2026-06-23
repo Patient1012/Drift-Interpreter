@@ -24,7 +24,7 @@
         var lexer = new Lexer(source);
         var tokens = lexer.Tokenize();
 
-        foreach (var token in tokens) Console.WriteLine($"{token.Type} : {token.Value}");
+        //foreach (var token in tokens) Console.WriteLine($"{token.Type} : {token.Value}");
         //  Parser
         var parser = new Parser(tokens);
         var program = parser.Parse();

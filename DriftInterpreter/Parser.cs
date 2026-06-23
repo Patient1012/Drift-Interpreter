@@ -239,6 +239,27 @@
                 return ParseCall(token.Value);
             return new VariableExpression(token.Value);
         }
+        if (token.Type == TokenType.Identifier)
+        {
+            string name = token.Value;
+
+            if (Match(TokenType.LeftSquareBrace))
+            {
+                Advance(); // [
+
+                Expression x = ParseExpression();
+
+                Advance(); // ,
+
+                Expression y = ParseExpression();
+
+                Advance(); // ]
+
+                return new ArrayAccess(name, x, y);
+            }
+
+            return new VariableExpression(name);
+        }
 
         throw new Exception("Unexpected token in expression");
     }
@@ -264,15 +285,37 @@
     {
         if (_tokens[_position].Type == TokenType.Comma)
             throw new Exception("Parser desync: comma reached statement level");
+        
         Console.WriteLine($"STATEMENT: {_tokens[_position].Type} at {_position}");
         Console.WriteLine($"ParseStatement: Position={_position}, Token={_tokens[_position].Type}");
+        
         if (_position + 1 < _tokens.Count && _tokens[_position].Type == TokenType.Identifier &&
             _tokens[_position + 1].Type == TokenType.Equals)
             return ParseAssignment();
+        
         if (_position + 1 < _tokens.Count && _tokens[_position].Type == TokenType.Identifier &&
             _tokens[_position + 1].Type == TokenType.LeftParen)
             return ParseCallStatement();
+        
         if (Match(TokenType.Var)) return ParseVarDeclaration();
+        
+        if (Match(TokenType.Var))
+        {
+            Token type = Advance();
+            Token name = Advance();
+
+            Advance(); // [
+
+            Token width = Advance();
+            Advance(); // ,
+
+            Token height = Advance();
+            Advance(); // ]
+
+            Advance(); // ;
+
+            return new ArrayDeclaration(name.Value, int.Parse(width.Value), int.Parse(height.Value));
+        }
 
         if (Match(TokenType.Const)) return ParseVarDeclaration();
         if (Match(TokenType.Println)) return ParsePrintln();

@@ -1,7 +1,8 @@
 ﻿public class Interpreter
 {
-    private Dictionary<string, Variable> variables = new();
+  
     private Dictionary<string, FunctionDeclaration> functions = new();
+    Dictionary<string, Value> variables = new();
 
     public void Run(List<Statement> statements)
     {
@@ -57,9 +58,22 @@
                 foreach (var stmt in w.Body)
                     Execute(stmt);
         }
+        if (statement is ArrayDeclaration arr)
+        {
+            variables[arr.Name] = new ArrayValue(arr.Width, arr.Height);
+        }
         else if (statement is VarDeclaration v)
         {
-            variables[v.Name] = new Variable(v.Type, Evaluate(v.Value), v.IsConst);
+            variables[v.Name] = new Value(Type=ValueType.Array,v.Type, Evaluate(v.Value), v.IsConst);
+        }
+        if (statement is ArrayAssignment a)
+        {
+            var array = (ArrayValue)variables[a.Target.Name];
+
+            int x = Convert.ToInt32(Evaluate(a.Target.X));
+            int y = Convert.ToInt32(Evaluate(a.Target.Y));
+
+            array.Data[array.Index(x, y)] = Evaluate(a.Value);
         }
         else if (statement is CallStatement c)
         {
@@ -86,6 +100,16 @@
 
         if (expr is VariableExpression v)
             return variables[v.Name].Value;
+        
+        if (expr is ArrayAccess a)
+        {
+            var array = (ArrayValue)variables[a.Name];
+
+            int x = Convert.ToInt32(Evaluate(a.X));
+            int y = Convert.ToInt32(Evaluate(a.Y));
+
+            return array.Data[array.Index(x, y)];
+        }
 
         if (expr is BinaryExpression b)
         {

@@ -123,6 +123,14 @@ public class Lexer
                 case ')':
                     tokens.Add(new Token(TokenType.RightParen, ")"));
                     break;
+                
+                case '[':
+                    tokens.Add(new Token(TokenType.LeftSquareBrace, "["));
+                    break;
+                
+                case ']':
+                    tokens.Add(new Token(TokenType.RightSquareBrace, "]"));
+                    break;
 
                 case ',':
                     tokens.Add(new Token(TokenType.Comma, ","));
