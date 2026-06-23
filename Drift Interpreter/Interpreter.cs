@@ -5,18 +5,25 @@
 
     public void Run(List<Statement> statements)
     {
-        foreach (var stmt in statements)
-        {
-            Execute(stmt);
-        }
+        foreach (var stmt in statements) Execute(stmt);
         foreach (var pair in variables)
-        {
             if (!pair.Value.IsConst && !pair.Value.WasModified)
-            {
                 throw new Exception($"Warning: Variable '{pair.Key}' was never modified.");
-            }
-        }
     }
+
+    private bool TypeMatches(string expectedType, object value)
+    {
+        return expectedType switch
+        {
+            "i8" or "i16" or "i32" or "i64" => value is int,
+            "f16" or "f32" or "f64" => value is float or double,
+            "str" => value is string,
+            "bool" => value is bool,
+            "void" => value == null,
+            _ => false
+        };
+    }
+
     private void Execute(Statement statement)
     {
         if (statement is PrintStatement p)
@@ -33,33 +40,26 @@
             }
 
             foreach (var elif in i.ElifBranches)
-            {
                 if ((bool)Evaluate(elif.Condition))
                 {
                     foreach (var stmt in elif.Body)
                         Execute(stmt);
                     return;
                 }
-            }
 
             if (i.ElseBranch != null)
-            {
                 foreach (var stmt in i.ElseBranch)
                     Execute(stmt);
-            }
         }
         else if (statement is WhileStatement w)
         {
             while ((bool)Evaluate(w.Condition))
-            {
                 foreach (var stmt in w.Body)
                     Execute(stmt);
-            }
         }
         else if (statement is VarDeclaration v)
         {
-            variables[v.Name] = new Variable(Evaluate(v.Value), v.IsConst);
-
+            variables[v.Name] = new Variable(v.Type, Evaluate(v.Value), v.IsConst);
         }
         else if (statement is CallStatement c)
         {
@@ -71,7 +71,11 @@
         }
         else if (statement is ReturnStatement r)
         {
-            throw new ReturnException(Evaluate(r.Value));
+            object? value = null;
+
+            if (r.Value != null) value = Evaluate(r.Value);
+
+            throw new ReturnException(value);
         }
     }
 
@@ -85,15 +89,15 @@
 
         if (expr is BinaryExpression b)
         {
-            int left = (int)Evaluate(b.Left);
-            int right = (int)Evaluate(b.Right);
+            var left = (int)Evaluate(b.Left);
+            var right = (int)Evaluate(b.Right);
 
             return b.Operator switch
             {
                 "+" => left + right,
                 "-" => left - right,
-                "<"  => left < right,
-                ">"  => left > right,
+                "<" => left < right,
+                ">" => left > right,
                 "<=" => left <= right,
                 ">=" => left >= right,
                 "==" => left == right,
@@ -101,37 +105,34 @@
                 _ => throw new Exception($"Unknown operator {b.Operator}")
             };
         }
-        if (expr is CallExpression c)
+
+        if (expr is CallExpression call)
         {
-            FunctionDeclaration function = functions[c.Name];
+            var function = functions[call.Name];
 
-            var oldVariables =
-                new Dictionary<string, Variable>(variables);
-
-            for (int i = 0; i < function.Parameters.Count; i++)
-            {
-                variables[function.Parameters[i]] =
-                    new Variable(Evaluate(c.Arguments[i]), false);
-            }
             try
             {
-                foreach (var stmt in function.Body)
-                {
-                    Execute(stmt);
-                }
+                foreach (var stmt in function.Body) Execute(stmt);
             }
             catch (ReturnException ret)
             {
-                variables = oldVariables;
                 if (function.ReturnType == "void")
                 {
-                    throw new Exception(
-                        $"Void function '{function.Name}' cannot return a value.");
+                    if (ret.Value != null)
+                        throw new Exception($"Void function '{function.Name}' cannot return a value.");
+
+                    return null;
                 }
+
+                if (ret.Value == null) throw new Exception($"Function '{function.Name}' must return a value.");
+                if (!TypeMatches(function.ReturnType, ret.Value))
+                    throw new Exception(
+                        $"Function '{function.Name}' returns '{ret.Value?.GetType().Name}' but expected '{function.ReturnType}'");
+
                 return ret.Value;
             }
-            
-            variables = oldVariables;
+
+            if (function.ReturnType != "void") throw new Exception($"Function '{function.Name}' must return a value.");
 
             return null;
         }

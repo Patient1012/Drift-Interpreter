@@ -1,32 +1,36 @@
-﻿class Program
+﻿internal class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-
-        string code = 
-                """
-                f16 greet()
-                {
-                    const i32 x = 10;
-                    println("hello");
-                }
-                """;
-       
-        //  Lexer
-        Lexer lexer = new Lexer(code);
-        List<Token> tokens = lexer.Tokenize();
-        
-        foreach (var token in tokens)
+        if (args.Length == 0)
         {
-            Console.WriteLine($"{token.Type} : {token.Value}");
+            Console.WriteLine("Usage: drift <file.drf>");
+            return;
         }
+
+        var source = File.ReadAllText(args[0]);
+
+
+        /*string code =
+                """
+                void greet()
+                {
+                    return 5;
+                }
+                greet();
+                """;
+       */
+        //  Lexer
+        var lexer = new Lexer(source);
+        var tokens = lexer.Tokenize();
+
+        foreach (var token in tokens) Console.WriteLine($"{token.Type} : {token.Value}");
         //  Parser
-        Parser parser = new Parser(tokens);
-        List<Statement> program = parser.Parse();
+        var parser = new Parser(tokens);
+        var program = parser.Parse();
 
         // Interpreter
-        Interpreter interpreter = new Interpreter();
+        var interpreter = new Interpreter();
         interpreter.Run(program);
     }
-    
 }
