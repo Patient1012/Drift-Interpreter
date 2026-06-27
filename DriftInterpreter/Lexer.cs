@@ -170,10 +170,19 @@ public class Lexer
             "i16" => new Token(TokenType.I16, text),
             "i32" => new Token(TokenType.I32, text),
             "i64" => new Token(TokenType.I64, text),
+            
+            "ui8" => new Token(TokenType.UI8, text),
+            "ui16" => new Token(TokenType.UI16, text),
+            "ui32" => new Token(TokenType.UI32, text),
+            "ui64" => new Token(TokenType.UI64, text),
 
             "f16" => new Token(TokenType.F16, text),
             "f32" => new Token(TokenType.F32, text),
             "f64" => new Token(TokenType.F64, text),
+            
+            "uf16" => new Token(TokenType.UF16, text),
+            "uf32" => new Token(TokenType.UF32, text),
+            "uf64" => new Token(TokenType.UF64, text),
 
             "str" => new Token(TokenType.Str, text),
             "bool" => new Token(TokenType.Bool, text),

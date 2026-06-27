@@ -40,6 +40,8 @@
 
         Advance(); // ;
 
+        Console.WriteLine($"parser : {name.Value}, IsConst{isConst}");
+
         return new VarDeclaration(name.Value, valueExpression, type.Value, isConst);
     }
 
@@ -95,11 +97,21 @@
         TokenType.I8,
         TokenType.I16,
         TokenType.I32,
-        TokenType.I64,
+        TokenType.I64,  
+        
+        TokenType.UI8,
+        TokenType.UI16,
+        TokenType.UI32,
+        TokenType.UI64,
 
         TokenType.F16,
         TokenType.F32,
         TokenType.F64,
+        
+        TokenType.UF16,
+        TokenType.UF32,
+        TokenType.UF64,
+        
 
         TokenType.Bool,
         TokenType.Char,
@@ -239,19 +251,20 @@
                 return ParseCall(token.Value);
             return new VariableExpression(token.Value);
         }
+
         if (token.Type == TokenType.Identifier)
         {
-            string name = token.Value;
+            var name = token.Value;
 
             if (Match(TokenType.LeftSquareBrace))
             {
                 Advance(); // [
 
-                Expression x = ParseExpression();
+                var x = ParseExpression();
 
                 Advance(); // ,
 
-                Expression y = ParseExpression();
+                var y = ParseExpression();
 
                 Advance(); // ]
 
@@ -285,36 +298,39 @@
     {
         if (_tokens[_position].Type == TokenType.Comma)
             throw new Exception("Parser desync: comma reached statement level");
-        
+
         Console.WriteLine($"STATEMENT: {_tokens[_position].Type} at {_position}");
         Console.WriteLine($"ParseStatement: Position={_position}, Token={_tokens[_position].Type}");
-        
+
         if (_position + 1 < _tokens.Count && _tokens[_position].Type == TokenType.Identifier &&
-            _tokens[_position + 1].Type == TokenType.Equals)
-            return ParseAssignment();
-        
+            _tokens[_position + 1].Type == TokenType.Equals) return ParseAssignment();
+
         if (_position + 1 < _tokens.Count && _tokens[_position].Type == TokenType.Identifier &&
-            _tokens[_position + 1].Type == TokenType.LeftParen)
-            return ParseCallStatement();
-        
+            _tokens[_position + 1].Type == TokenType.LeftParen) return ParseCallStatement();
+
         if (Match(TokenType.Var)) return ParseVarDeclaration();
-        
+
         if (Match(TokenType.Var))
         {
-            Token type = Advance();
-            Token name = Advance();
+            var type = Advance();
+            var name = Advance();
 
             Advance(); // [
 
-            Token width = Advance();
+            var width = Advance();
             Advance(); // ,
 
-            Token height = Advance();
+            var height = Advance();
             Advance(); // ]
 
             Advance(); // ;
 
-            return new ArrayDeclaration(name.Value, int.Parse(width.Value), int.Parse(height.Value));
+            return new ArrayDeclaration(name.Value, new List<int>
+                {
+                    int.Parse(width.Value),
+                    int.Parse(height.Value)
+                }
+            );
         }
 
         if (Match(TokenType.Const)) return ParseVarDeclaration();
@@ -324,12 +340,11 @@
         if (Match(TokenType.For)) return ParseWhile();
         if (Match(TokenType.Return)) return ParseReturn();
         if (IsType(_tokens[_position]) && _tokens[_position + 1].Type == TokenType.Identifier &&
-            _tokens[_position + 2].Type == TokenType.LeftParen)
-            return ParseFunction();
+            _tokens[_position + 2].Type == TokenType.LeftParen) return ParseFunction();
         throw new Exception($"Unknown statement: {_tokens[_position].Type}");
     }
 
-    private Token Advance()
+    private Token? Advance()
     {
         if (_position >= _tokens.Count) throw new Exception("Parser advanced past EOF");
         return _tokens[_position++];

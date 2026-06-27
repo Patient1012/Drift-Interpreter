@@ -1,13 +1,11 @@
 ﻿public class ArrayDeclaration : Statement
 {
     public string Name;
-    public int Width;
-    public int Height;
+    public List<int> Dimensions;
 
-    public ArrayDeclaration(string name, int width, int height)
+    public ArrayDeclaration(string name, List<int> dimensions)
     {
         Name = name;
-        Width = width;
-        Height = height;
+        Dimensions = dimensions;
     }
 }
