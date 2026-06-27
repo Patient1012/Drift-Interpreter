@@ -64,6 +64,16 @@ multi-line comment
 # Primitive Types
 
 ## Integer Types
+### Signed Integer Types
+
+| Type | Size                  |
+| ---- | --------------------- |
+| i8   | 8-bit signed integer  |
+| i16  | 16-bit signed integer |
+| i32  | 32-bit signed integer |
+| i64  | 64-bit signed integer |
+
+### Unsigned Integer Types
 
 | Type | Size                  |
 | ---- | --------------------- |
@@ -73,6 +83,15 @@ multi-line comment
 | i64  | 64-bit signed integer |
 
 ## Floating Point Types
+### Signed Floating Types
+
+| Type | Size                  |
+| ---- | --------------------- |
+| f16  | 16-bit floating point |
+| f32  | 32-bit floating point |
+| f64  | 64-bit floating point |
+
+### Unsigned Floating Types
 
 | Type | Size                  |
 | ---- | --------------------- |
