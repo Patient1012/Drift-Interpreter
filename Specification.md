@@ -77,10 +77,10 @@ multi-line comment
 
 | Type | Size                  |
 | ---- | --------------------- |
-| i8   | 8-bit signed integer  |
-| i16  | 16-bit signed integer |
-| i32  | 32-bit signed integer |
-| i64  | 64-bit signed integer |
+| ui8   | 8-bit signed integer  |
+| ui16  | 16-bit signed integer |
+| ui32  | 32-bit signed integer |
+| ui64  | 64-bit signed integer |
 
 ## Floating Point Types
 ### Signed Floating Types
@@ -95,9 +95,9 @@ multi-line comment
 
 | Type | Size                  |
 | ---- | --------------------- |
-| f16  | 16-bit floating point |
-| f32  | 32-bit floating point |
-| f64  | 64-bit floating point |
+| uf16  | 16-bit floating point |
+| uf32  | 32-bit floating point |
+| uf64  | 64-bit floating point |
 
 ## Other Types
 
