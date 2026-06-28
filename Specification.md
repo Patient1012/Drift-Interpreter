@@ -106,6 +106,7 @@ multi-line comment
 | bool | Boolean value     |
 | char | Unicode character |
 | str  | UTF-8 string      |
+| str16 | UTF-16 string    |
 
 ---
 
