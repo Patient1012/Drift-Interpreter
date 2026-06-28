@@ -243,7 +243,7 @@
     {
         var token = Advance();
 
-        if (token.Type == TokenType.Number) return new LiteralExpression(int.Parse(token.Value));
+        if (token.Type == TokenType.Number) return new LiteralExpression(token.Value);
         if (token.Type == TokenType.String) return new LiteralExpression(token.Value);
         if (token.Type == TokenType.Identifier)
         {

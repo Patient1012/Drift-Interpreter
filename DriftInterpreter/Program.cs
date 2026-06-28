@@ -15,7 +15,7 @@
             """
             void greet()
             {
-                const ui8 x = 16;
+                const i8 x = 16;
                 println(x);
             }
             greet();
@@ -29,6 +29,10 @@
         //  Parser
         var parser = new Parser(tokens);
         var program = parser.Parse();
+        
+        // Semantic Analyser
+        var analyser = new SemanticAnalyser();
+        analyser.Analyse(program);
 
         // Interpreter
         var interpreter = new Interpreter();

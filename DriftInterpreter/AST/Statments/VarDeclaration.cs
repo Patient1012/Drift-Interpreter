@@ -1,9 +1,9 @@
 ﻿public class VarDeclaration : Statement
 {
-    public string Name;
-    public Expression Value;
-    public string Type;
-    public bool IsConst;
+    public string Name { get; }
+    public Expression Value { get; }
+    public string Type { get; }
+    public bool IsConst { get; }
 
     public VarDeclaration(string name, Expression value, string type, bool isConst)
     {
@@ -12,4 +12,4 @@
         Type = type;
         IsConst = isConst;
     }
-}
+};

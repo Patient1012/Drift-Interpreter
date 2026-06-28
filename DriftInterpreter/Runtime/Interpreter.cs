@@ -124,9 +124,7 @@
 
             if (!TypeMatches(type, value))
             {
-                throw new Exception(
-                    $"Cannot assign value of type '{value?.GetType().Name ?? "null"}' to {type}."
-                );
+                throw new Exception($"Cannot assign value of type '{value?.GetType().Name ?? "null"}' to {type}.");
             }
 
             variables[v.Name] = new Value(value, type, v.IsConst, false);
@@ -170,8 +168,19 @@
 
     private object? Evaluate(Expression expr)
     {
-        if (expr is LiteralExpression l) return l.Value;
-        if (expr is VariableExpression v) return variables[v.Name].Data;
+        if (expr is LiteralExpression l)
+        {
+            return int.Parse(l.Text);
+        }
+        if (expr is VariableExpression v)
+        {
+            if (!variables.TryGetValue(v.Name, out var value))
+            {
+                throw new Exception($"Undefined variables '{v.Name}'");
+            }
+
+            return value.Data;
+        }
         if (expr is ArrayAccess a)
         {
             var value = variables[a.Name];
@@ -189,11 +198,20 @@
         {
             Console.WriteLine(b.Left.GetType().Name);
             Console.WriteLine(Evaluate(b.Left) ?? "NULL");
-
-            // Problem here
-            var left = (int)Evaluate(b.Left);
-            var right = (int)Evaluate(b.Right);
-
+            
+            object? leftObj = Evaluate(b.Left);
+            
+            if (leftObj is not int left)
+            {
+                throw new Exception("Left operand is not an int.");
+            }
+            
+            object? rightObj = Evaluate(b.Right);
+            
+            if (rightObj is not int right)
+            {
+                throw new Exception("Right operand is not an int.");
+            }
             return b.Operator switch
             {
                 "+" => left + right,
@@ -210,7 +228,10 @@
 
         if (expr is CallExpression call)
         {
-            var function = functions[call.Name];
+            if (!functions.TryGetValue(call.Name, out var function))
+            {
+                throw new Exception($"Unknown function '{call.Name}'.");
+            }
             try
             {
                 foreach (var stmt in function.Body) Execute(stmt);

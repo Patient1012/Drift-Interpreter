@@ -1,5 +1,4 @@
-﻿
-public class Lexer
+﻿public class Lexer
 {
     private readonly string _source;
     private int _position;
@@ -16,7 +15,6 @@ public class Lexer
 
         return _source[_position + 1];
     }
-
 
     public List<Token> Tokenize()
     {
@@ -138,11 +136,9 @@ public class Lexer
 
                 default:
                     throw new Exception($"Unexpected character: {current}");
-                }
-
+            }
             _position++;
         }
-
         tokens.Add(new Token(TokenType.EOF, ""));
         return tokens;
     }
@@ -211,12 +207,10 @@ public class Lexer
     {
         int start = _position;
 
-        while (_position < _source.Length &&
-               char.IsDigit(_source[_position]))
+        while (_position < _source.Length && char.IsDigit(_source[_position]))
         {
             _position++;
         }
-
         string number = _source[start.._position];
 
         return new Token(TokenType.Number, number);
@@ -225,19 +219,14 @@ public class Lexer
     private Token ReadString()
     {
         _position++;
-
         int start = _position;
 
-        while (_position < _source.Length &&
-               _source[_position] != '"')
+        while (_position < _source.Length && _source[_position] != '"')
         {
             _position++;
         }
-
         string value = _source[start.._position];
-
         _position++;
-
         return new Token(TokenType.String, value);
     }
 
