@@ -247,8 +247,16 @@ while (x < 5)
 ```
 ## For Loop
 ```drift
-for (i32 i=0, i<0, i++)
-{}
+for (i32 i =0, i =<3, i++)
+{
+    println(i)
+}
+/*
+    0
+    1
+    2
+    3
+*/
 ```
 ---
 
