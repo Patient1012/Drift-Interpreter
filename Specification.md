@@ -245,7 +245,11 @@ while (x < 5)
     x = x + 1;
 }
 ```
-
+## For Loop
+```drift
+for (i32 i=0, i<0, i++)
+{}
+```
 ---
 
 # Functions
