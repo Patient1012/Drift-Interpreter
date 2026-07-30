@@ -1,4 +1,4 @@
-### Drift Language Specification
+# **Drift Language Specification**
 
 Version 0.1 Draft
 
