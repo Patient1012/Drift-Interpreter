@@ -363,11 +363,139 @@ or
 
 Can be edited with:
 
-`arrayname[] = {};`
+`arrayname[]  :{};`
 
 Example:
 
-`var i32 prices[2,3] = {12,3},{6,3},{8,3}};`
+` var i32 prices[2,3] :{12,3},{6,3},{8,3}}; `
+---
+# Data Structures
+
+## Structs
+```drift
+struct player {
+   ui16 age;
+   str name;
+   i32 health;
+}
+
+void main(struct Player player) {
+   player.name = "bob";
+   player.age = "32";
+   println(player.age);
+}
+```
+## Hash Maps
+
+Hash maps are a built-in generic data structure used to store key-value pairs.
+
+### Declaration
+
+Syntax:
+
+```drift
+hash<key_type, value_type> variable_name;
+```
+
+Example:
+
+```drift
+hash<str, i32> scores;
+```
+
+The first type defines the key type.
+The second type defines the stored value type.
+
+---
+
+### Initialisation
+
+Hash maps can be initialised using the `:` assignment syntax.
+
+Syntax:
+
+```drift
+hash<key_type, value_type> variable_name : {
+    key: value,
+    key: value
+};
+```
+
+Example:
+
+```drift
+hash<str, i32> scores : {
+    "Bob": 32,
+    "Jim": 17
+};
+```
+
+---
+
+### Accessing Values
+
+Values are accessed using square brackets.
+
+Example:
+
+```drift
+println(scores["Bob"]);
+```
+
+Values can be modified using the same syntax:
+
+```drift
+scores["Bob"] = 50;
+```
+
+New keys may be added by assigning a value:
+
+```drift
+scores["Alice"] = 90;
+```
+
+---
+
+### Passing Hash Maps
+
+Hash maps can be used as function parameters.
+
+Example:
+
+```drift
+void printScores(hash<str, i32> scores) {
+    println(scores["Bob"]);
+}
+```
+
+---
+
+### Iteration
+
+Hash maps can be iterated using `foreach`.
+
+Example:
+
+```drift
+foreach (key, value in scores) {
+    println(key);
+    println(value);
+}
+```
+
+---
+
+### Design Rules
+
+* Hash maps are generic types.
+* Keys and values must have defined types.
+* Hash maps follow the standard Drift declaration format:
+
+```drift
+TYPE NAME : VALUE;
+```
+
+* The hash map type name is lowercase to match built-in types such as `i32`, `str`, and `void`.
 
 ---
 # Error Handling
