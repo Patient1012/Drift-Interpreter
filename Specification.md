@@ -359,7 +359,7 @@ Arrays are declared this way:
 
 or 
 
-`mutability_type primitive_type array_name[x,y,z] = {{},{}};`
+`mutability_type primitive_type array_name[x,y,z] : {{},{}};`
 
 Can be edited with:
 
@@ -372,8 +372,11 @@ Example:
 # Data Structures
 
 ## Structs
+
+Structs can be initialised using the `:` assignment syntax.
+
 ```drift
-struct player {
+struct player : {
    ui16 age;
    str name;
    i32 health;
