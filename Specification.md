@@ -406,8 +406,11 @@ Planned features include:
 # Example Program
 
 ```drift
-const i32 passMark = 50;
 
+void main() {
+    const i32 passMark = 50;
+    println(checkScore(75));
+}
 i32 checkScore(i32 score)
 {
     if (score >= passMark)
@@ -420,5 +423,5 @@ i32 checkScore(i32 score)
     }
 }
 
-println(checkScore(75));
+
 ```
