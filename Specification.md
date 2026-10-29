@@ -302,7 +302,7 @@ Void functions do not return a value.
 
 # Input and Output
 
-## println
+## print()
 
 Prints a value followed by a newline.
 
@@ -310,6 +310,21 @@ Prints a value followed by a newline.
 println("Hello, World!");
 println(score);
 ```
+## print()
+
+prints a value without a new line afterwards
+
+## readln()
+
+reads the entire line of input until enter is pressed, includes white spaces.
+
+```drift
+str userInput = readln();
+```
+
+## read() 
+
+reads user input until a white spaces, does not include the white space
 
 ---
 
