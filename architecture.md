@@ -15,7 +15,7 @@
 ├── .gitignore
 ├── drift                         # Published self-contained Linux executable
 ├── examples/hello.drf            # Runnable example
-├── src/DriftInterpreter/
+├── src/
 │   ├── DriftInterpreter.csproj   # net10.0 console executable
 │   ├── Program.cs                # CLI entry point
 │   ├── Diagnostics/
@@ -83,7 +83,7 @@ The C# code does not declare any namespaces. All types live in the global namesp
 
 ## 2. Build configuration
 
-`src/DriftInterpreter/DriftInterpreter.csproj`:
+`src/DriftInterpreter.csproj`:
 
 - SDK: `Microsoft.NET.Sdk`
 - Output: `Exe`

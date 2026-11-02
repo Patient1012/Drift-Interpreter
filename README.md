@@ -15,7 +15,7 @@ Drift also tries to solve the infinite way of doing something in C, an example i
 Drift is still a work in progress. The current interpreter supports a small subset of the language; see [docs/Features.md](docs/Features.md) and [TODO.md](TODO.md).
 
 ## Repository layout
-- `src/DriftInterpreter/` — C# interpreter source.
+- `src/` — C# interpreter source.
 - `docs/` — Language specification and project documentation.
 - `tools/tree-sitter-drift/` — Tree-sitter grammar for editor tooling.
 - `examples/hello.drf` — Runnable example (format specifiers, `while`, `if/else`)
@@ -48,7 +48,7 @@ examples/broken.drf:3:9: error: Undefined variable 'missing'.
 To rebuild the executable after changing the source:
 
 ```sh
-dotnet publish src/DriftInterpreter/DriftInterpreter.csproj \
+dotnet publish src/DriftInterpreter.csproj \
   -c Release -r linux-x64 --self-contained true \
   -p:PublishSingleFile=true -p:AssemblyName=drift \
   -p:DebugType=None -p:DebugSymbols=false \
@@ -68,7 +68,7 @@ export PATH="$HOME/.dotnet:$PATH"
 ## Building and running from source
 ```sh
 dotnet build Drift.sln
-dotnet run --project src/DriftInterpreter -- examples/hello.drf
+dotnet run --project src -- examples/hello.drf
 ```
 
 ## Running tests
