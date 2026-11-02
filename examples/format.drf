@@ -1,0 +1,16 @@
+// Drift example: format specifiers
+// Run with: ./drift examples/format.drf
+
+void main()
+{
+    var str name = "Drift";
+    println("Hello, %s!", name);
+    println("2 + 3 = %i (100%%)", add(2, 3));
+    println("%s scored %i points", "Noah", 42);
+    println("%v %v %v", 1.5, true, 'A');
+}
+
+i32 add(i32 a, i32 b)
+{
+    return a + b;
+}

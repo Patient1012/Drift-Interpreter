@@ -1,0 +1,15 @@
+// Drift example: scope and auto main (case-insensitive)
+// Run with: ./drift examples/scope.drf
+
+void mAin()
+{
+    var i32 count = 2;
+    println("Auto main, count=%i", count);
+    println("Inner scope: %i", innerFunc());
+}
+
+i32 innerFunc()
+{
+    var i32 x = 99;
+    return x;
+}

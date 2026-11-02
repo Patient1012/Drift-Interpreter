@@ -1,0 +1,15 @@
+// Drift example: control flow and functions
+// Run with: ./drift examples/control.drf
+
+void main()
+{
+    var i32 n = 5;
+    println("Factorial of %i = %i", n, fact(n));
+    println("Loop: %i %i %i", 1, 2, 3);
+}
+
+i32 fact(i32 x)
+{
+    if (x <= 1) { return 1; }
+    return x * fact(x - 1);
+}

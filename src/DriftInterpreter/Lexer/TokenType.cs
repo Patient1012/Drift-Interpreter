@@ -1,6 +1,5 @@
 ﻿
-public enum TokenType
-{
+public enum TokenType {
     Identifier,
     Number,
     String,

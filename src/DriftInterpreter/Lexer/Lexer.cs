@@ -1,24 +1,20 @@
-﻿using System.Text;
+using System.Text;
 
-public class Lexer
-{
+public class Lexer {
     private readonly string _source;
     private readonly List<int> _lineStarts = new() { 0 };
     private int _position;
 
-    public Lexer(string source)
-    {
+    public Lexer(string source) {
         _source = source;
 
-        for (int i = 0; i < source.Length; i++)
-        {
+        for (int i = 0; i < source.Length; i++) {
             if (source[i] == '\n')
                 _lineStarts.Add(i + 1);
         }
     }
 
-    private char Peek(int offset = 1)
-    {
+    private char Peek(int offset = 1) {
         int index = _position + offset;
         if (index >= _source.Length)
             return '\0';
@@ -26,8 +22,7 @@ public class Lexer
         return _source[index];
     }
 
-    private SourcePosition PositionAt(int offset)
-    {
+    private SourcePosition PositionAt(int offset) {
         int index = _lineStarts.BinarySearch(offset);
         if (index < 0)
             index = ~index - 1;
@@ -38,60 +33,50 @@ public class Lexer
         return new SourcePosition(offset, index + 1, offset - _lineStarts[index] + 1);
     }
 
-    private Token MakeToken(TokenType type, string value, int start)
-    {
+    private Token MakeToken(TokenType type, string value, int start) {
         return new Token(type, value, PositionAt(start));
     }
 
-    public List<Token> Tokenize()
-    {
+    public List<Token> Tokenize() {
         List<Token> tokens = new();
 
-        while (_position < _source.Length)
-        {
+        while (_position < _source.Length) {
             char current = _source[_position];
 
-            if (char.IsWhiteSpace(current))
-            {
+            if (char.IsWhiteSpace(current)) {
                 _position++;
                 continue;
             }
 
-            if (current == '/' && Peek() == '/')
-            {
+            if (current == '/' && Peek() == '/') {
                 SkipLineComment();
                 continue;
             }
 
-            if (current == '/' && Peek() == '*')
-            {
+            if (current == '/' && Peek() == '*') {
                 SkipBlockComment(_position);
                 continue;
             }
 
-            if (char.IsLetter(current) || current == '_')
-            {
+            if (char.IsLetter(current) || current == '_') {
                 int start = _position;
                 tokens.Add(ReadIdentifier(start));
                 continue;
             }
 
-            if (char.IsDigit(current))
-            {
+            if (char.IsDigit(current)) {
                 int start = _position;
                 tokens.Add(ReadNumber(start));
                 continue;
             }
 
-            if (current == '"')
-            {
+            if (current == '"') {
                 int start = _position;
                 tokens.Add(ReadString(start));
                 continue;
             }
 
-            if (current == '\'')
-            {
+            if (current == '\'') {
                 int start = _position;
                 tokens.Add(ReadChar(start));
                 continue;
@@ -99,8 +84,7 @@ public class Lexer
 
             int tokenStart = _position;
 
-            switch (current)
-            {
+            switch (current) {
                 case '+':
                     tokens.Add(MakeToken(TokenType.Plus, "+", tokenStart));
                     break;
@@ -130,49 +114,41 @@ public class Lexer
                     break;
 
                 case '=':
-                    if (Peek() == '=')
-                    {
+                    if (Peek() == '=') {
                         tokens.Add(MakeToken(TokenType.EqualEqual, "==", tokenStart));
                         _position++;
                     }
-                    else
-                    {
+                    else {
                         tokens.Add(MakeToken(TokenType.Equals, "=", tokenStart));
                     }
                     break;
 
                 case '!':
-                    if (Peek() == '=')
-                    {
+                    if (Peek() == '=') {
                         tokens.Add(MakeToken(TokenType.NotEqual, "!=", tokenStart));
                         _position++;
                     }
-                    else
-                    {
+                    else {
                         tokens.Add(MakeToken(TokenType.Bang, "!", tokenStart));
                     }
                     break;
 
                 case '>':
-                    if (Peek() == '=')
-                    {
+                    if (Peek() == '=') {
                         tokens.Add(MakeToken(TokenType.GreaterEqual, ">=", tokenStart));
                         _position++;
                     }
-                    else
-                    {
+                    else {
                         tokens.Add(MakeToken(TokenType.Greater, ">", tokenStart));
                     }
                     break;
 
                 case '<':
-                    if (Peek() == '=')
-                    {
+                    if (Peek() == '=') {
                         tokens.Add(MakeToken(TokenType.LessEqual, "<=", tokenStart));
                         _position++;
                     }
-                    else
-                    {
+                    else {
                         tokens.Add(MakeToken(TokenType.Less, "<", tokenStart));
                     }
                     break;
@@ -213,22 +189,18 @@ public class Lexer
         return tokens;
     }
 
-    private void SkipLineComment()
-    {
+    private void SkipLineComment() {
         _position += 2;
 
         while (_position < _source.Length && _source[_position] != '\n')
             _position++;
     }
 
-    private void SkipBlockComment(int start)
-    {
+    private void SkipBlockComment(int start) {
         _position += 2;
 
-        while (_position < _source.Length)
-        {
-            if (_source[_position] == '*' && Peek() == '/')
-            {
+        while (_position < _source.Length) {
+            if (_source[_position] == '*' && Peek() == '/') {
                 _position += 2;
                 return;
             }
@@ -239,18 +211,15 @@ public class Lexer
         throw new LexerException("Unterminated block comment.", PositionAt(start));
     }
 
-    private Token ReadIdentifier(int start)
-    {
+    private Token ReadIdentifier(int start) {
         while (_position < _source.Length &&
                (char.IsLetterOrDigit(_source[_position])
-                || _source[_position] == '_'))
-        {
+                || _source[_position] == '_')) {
             _position++;
         }
         string text = _source[start.._position];
 
-        return text switch
-        {
+        return text switch {
             "var" => MakeToken(TokenType.Var, text, start),
             "const" => MakeToken(TokenType.Const, text, start),
             "println" => MakeToken(TokenType.Println, text, start),
@@ -299,15 +268,12 @@ public class Lexer
         };
     }
 
-    private Token ReadNumber(int start)
-    {
-        while (_position < _source.Length && char.IsDigit(_source[_position]))
-        {
+    private Token ReadNumber(int start) {
+        while (_position < _source.Length && char.IsDigit(_source[_position])) {
             _position++;
         }
 
-        if (_position < _source.Length && _source[_position] == '.')
-        {
+        if (_position < _source.Length && _source[_position] == '.') {
             _position++;
 
             while (_position < _source.Length && char.IsDigit(_source[_position]))
@@ -319,15 +285,12 @@ public class Lexer
         return MakeToken(TokenType.Number, number, start);
     }
 
-    private Token ReadString(int start)
-    {
+    private Token ReadString(int start) {
         _position++;
         var value = new StringBuilder();
 
-        while (_position < _source.Length && _source[_position] != '"')
-        {
-            if (_source[_position] == '\\')
-            {
+        while (_position < _source.Length && _source[_position] != '"') {
+            if (_source[_position] == '\\') {
                 _position++;
                 value.Append(ReadEscape(start));
                 continue;
@@ -337,15 +300,15 @@ public class Lexer
             _position++;
         }
 
-        if (_position >= _source.Length)
+        if (_position >= _source.Length) {
             throw new LexerException("Unterminated string literal.", PositionAt(start));
+        }
 
         _position++;
         return MakeToken(TokenType.String, value.ToString(), start);
     }
 
-    private Token ReadChar(int start)
-    {
+    private Token ReadChar(int start) {
         _position++;
 
         if (_position >= _source.Length || _source[_position] == '\'')
@@ -353,13 +316,11 @@ public class Lexer
 
         char value;
 
-        if (_source[_position] == '\\')
-        {
+        if (_source[_position] == '\\') {
             _position++;
             value = ReadEscape(start);
         }
-        else
-        {
+        else {
             value = _source[_position];
             _position++;
         }
@@ -371,16 +332,14 @@ public class Lexer
         return MakeToken(TokenType.CharLiteral, value.ToString(), start);
     }
 
-    private char ReadEscape(int start)
-    {
+    private char ReadEscape(int start) {
         if (_position >= _source.Length)
             throw new LexerException("Unterminated escape sequence.", PositionAt(start));
 
         char escaped = _source[_position];
         _position++;
 
-        return escaped switch
-        {
+        return escaped switch {
             'n' => '\n',
             'r' => '\r',
             't' => '\t',

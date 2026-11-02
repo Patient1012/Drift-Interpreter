@@ -1,0 +1,10 @@
+// Drift example: comments
+// Line comments work anywhere.
+/*
+  Block comments work too.
+  They can span multiple lines.
+*/
+void main()
+{
+    println("Comments work!");
+}

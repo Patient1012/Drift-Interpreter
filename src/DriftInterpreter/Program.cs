@@ -1,26 +1,20 @@
-﻿internal static class Program
-{
-    internal static int Main(string[] args)
-    {
-        if (args.Length == 0)
-        {
+﻿internal static class Program {
+    internal static int Main(string[] args) {
+        if (args.Length == 0) {
             Console.Error.WriteLine("Usage: drift <file.drf>");
             return 1;
         }
 
         string source;
-        try
-        {
+        try {
             source = File.ReadAllText(args[0]);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) {
             Console.Error.WriteLine($"Could not read '{args[0]}': {ex.Message}");
             return 1;
         }
 
-        try
-        {
+        try {
             //  Lexer
             var lexer = new Lexer(source);
             var tokens = lexer.Tokenize();
@@ -39,13 +33,11 @@
 
             return 0;
         }
-        catch (DriftException ex)
-        {
+        catch (DriftException ex) {
             Console.Error.WriteLine(ex.ToDiagnosticString(args[0]));
             return 1;
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Console.Error.WriteLine($"Error: {ex.Message}");
             return 1;
         }

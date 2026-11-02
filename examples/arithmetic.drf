@@ -1,0 +1,11 @@
+// Drift example: arithmetic and precedence
+// Run with: ./drift examples/arithmetic.drf
+
+void main()
+{
+    println("1 + 2 * 3 = %i", 1 + 2 * 3);
+    println("(1 + 2) * 3 = %i", (1 + 2) * 3);
+    println("10 %% 3 = %i", 10 % 3);
+    println("7 / 2 = %f", 7 / 2);
+    println("true && false = %b", true != false);
+}

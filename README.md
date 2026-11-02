@@ -18,7 +18,12 @@ Drift is still a work in progress. The current interpreter supports a small subs
 - `src/DriftInterpreter/` — C# interpreter source.
 - `docs/` — Language specification and project documentation.
 - `tools/tree-sitter-drift/` — Tree-sitter grammar for editor tooling.
-- `examples/hello.drf` — Runnable example program.
+- `examples/hello.drf` — Runnable example (format specifiers, `while`, `if/else`)
+- `examples/format.drf` — Format specifiers (`%i`, `%s`, `%%`, `%v`)
+- `examples/control.drf` — Control flow, recursion, `while` loops
+- `examples/scope.drf` — Block scope and case-insensitive automatic `main`
+- `examples/arithmetic.drf` — Arithmetic, precedence, modulo, boolean operators
+- `examples/comments.drf` — Line and block comments
 - `drift` — Published self-contained Linux executable.
 
 ## Running the executable

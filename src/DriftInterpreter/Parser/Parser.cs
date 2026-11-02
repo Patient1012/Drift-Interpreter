@@ -1,42 +1,35 @@
-﻿public class Parser
-{
+﻿public class Parser {
     private readonly List<Token> _tokens;
     private int _position;
 
-    public Parser(List<Token> tokens)
-    {
+    public Parser(List<Token> tokens) {
         _tokens = tokens;
     }
 
-    public List<Statement> Parse()
-    {
+    public List<Statement> Parse() {
         List<Statement> statements = new();
         while (!IsAtEnd()) statements.Add(ParseStatement());
         return statements;
     }
 
-    private static T AtStatement<T>(T statement, SourcePosition location) where T : Statement
-    {
+    private static T AtStatement<T>(T statement, SourcePosition location) where T : Statement {
         statement.Location = location;
         return statement;
     }
 
-    private static T AtExpression<T>(T expression, SourcePosition location) where T : Expression
-    {
+    private static T AtExpression<T>(T expression, SourcePosition location) where T : Expression {
         expression.Location = location;
         return expression;
     }
 
-    private Statement ParseCallStatement()
-    {
+    private Statement ParseCallStatement() {
         var name = Consume(TokenType.Identifier, "Expected a function name");
         var call = ParseCall(name);
         Consume(TokenType.Semicolon, "Expected ';' after function call");
         return AtStatement(new CallStatement(call), name.Location);
     }
 
-    private VarDeclaration ParseVarDeclaration()
-    {
+    private VarDeclaration ParseVarDeclaration() {
         var keyword = Advance(); // var or const
         var isConst = keyword.Type == TokenType.Const;
 
@@ -52,8 +45,7 @@
             keyword.Location);
     }
 
-    private VarDeclaration ParseTypedVarDeclaration()
-    {
+    private VarDeclaration ParseTypedVarDeclaration() {
         var type = ConsumeType();
         var name = Consume(TokenType.Identifier, "Expected a variable name");
 
@@ -66,8 +58,7 @@
             type.Location);
     }
 
-    private FunctionDeclaration ParseFunction()
-    {
+    private FunctionDeclaration ParseFunction() {
         var returnType = ConsumeType();
         var name = Consume(TokenType.Identifier, "Expected a function name");
 
@@ -75,10 +66,8 @@
 
         List<string> parameters = new();
 
-        if (!Match(TokenType.RightParen))
-        {
-            do
-            {
+        if (!Match(TokenType.RightParen)) {
+            do {
                 ConsumeType();
                 var paramName = Consume(TokenType.Identifier, "Expected a parameter name");
                 parameters.Add(paramName.Value);
@@ -93,8 +82,7 @@
             returnType.Location);
     }
 
-    private ReturnStatement ParseReturn()
-    {
+    private ReturnStatement ParseReturn() {
         var token = Advance(); // return
 
         Expression? value = null;
@@ -105,8 +93,7 @@
         return AtStatement(new ReturnStatement(value), token.Location);
     }
 
-    private static readonly HashSet<TokenType> TypeTokens = new()
-    {
+    private static readonly HashSet<TokenType> TypeTokens = new() {
         TokenType.I8,
         TokenType.I16,
         TokenType.I32,
@@ -131,30 +118,25 @@
         TokenType.Void
     };
 
-    private static bool IsType(Token token)
-    {
+    private static bool IsType(Token token) {
         return TypeTokens.Contains(token.Type);
     }
 
-    private Token ConsumeType()
-    {
+    private Token ConsumeType() {
         if (!IsType(Current))
             throw new ParserException($"Expected a type but found '{Current.Value}'.", Current.Location);
 
         return Advance();
     }
 
-    private PrintStatement ParsePrintln()
-    {
+    private PrintStatement ParsePrintln() {
         var token = Advance(); // println
         Consume(TokenType.LeftParen, "Expected '(' after println");
 
         List<Expression> arguments = new();
 
-        if (!Match(TokenType.RightParen))
-        {
-            do
-            {
+        if (!Match(TokenType.RightParen)) {
+            do {
                 arguments.Add(ParseExpression());
             } while (Match(TokenType.Comma) && Advance() != null);
         }
@@ -164,8 +146,7 @@
         return AtStatement(new PrintStatement(arguments), token.Location);
     }
 
-    private IfStatement ParseIf()
-    {
+    private IfStatement ParseIf() {
         var token = Advance(); // if
         Consume(TokenType.LeftParen, "Expected '(' after if");
 
@@ -177,8 +158,7 @@
         List<(Expression Condition, List<Statement> Body)> elifBranches = new();
         List<Statement>? elseBranch = null;
 
-        while (Match(TokenType.Elif))
-        {
+        while (Match(TokenType.Elif)) {
             Advance(); // elif
             Consume(TokenType.LeftParen, "Expected '(' after elif");
 
@@ -190,8 +170,7 @@
             elifBranches.Add((elifCondition, body));
         }
 
-        if (Match(TokenType.Else))
-        {
+        if (Match(TokenType.Else)) {
             Advance(); // else
             elseBranch = ParseBlock();
         }
@@ -201,8 +180,7 @@
             token.Location);
     }
 
-    private WhileStatement ParseWhile()
-    {
+    private WhileStatement ParseWhile() {
         var token = Advance(); // while
         Consume(TokenType.LeftParen, "Expected '(' after while");
 
@@ -214,8 +192,7 @@
         return AtStatement(new WhileStatement(condition, body), token.Location);
     }
 
-    private List<Statement> ParseBlock()
-    {
+    private List<Statement> ParseBlock() {
         Consume(TokenType.LeftBrace, "Expected '{' to start a block");
 
         List<Statement> body = new();
@@ -226,8 +203,7 @@
         return body;
     }
 
-    private Statement ParseAssignment()
-    {
+    private Statement ParseAssignment() {
         var name = Consume(TokenType.Identifier, "Expected a variable name");
         Consume(TokenType.Equals, "Expected '=' in assignment");
 
@@ -237,17 +213,14 @@
         return AtStatement(new AssignmentStatement(name.Value, value), name.Location);
     }
 
-    private Expression ParseExpression()
-    {
+    private Expression ParseExpression() {
         return ParseEquality();
     }
 
-    private Expression ParseEquality()
-    {
+    private Expression ParseEquality() {
         var left = ParseComparison();
 
-        while (Match(TokenType.EqualEqual) || Match(TokenType.NotEqual))
-        {
+        while (Match(TokenType.EqualEqual) || Match(TokenType.NotEqual)) {
             var op = Advance();
             var right = ParseComparison();
             left = AtExpression(new BinaryExpression(left, op.Value, right), op.Location);
@@ -256,13 +229,11 @@
         return left;
     }
 
-    private Expression ParseComparison()
-    {
+    private Expression ParseComparison() {
         var left = ParseTerm();
 
         while (Match(TokenType.Less) || Match(TokenType.LessEqual) ||
-               Match(TokenType.Greater) || Match(TokenType.GreaterEqual))
-        {
+               Match(TokenType.Greater) || Match(TokenType.GreaterEqual)) {
             var op = Advance();
             var right = ParseTerm();
             left = AtExpression(new BinaryExpression(left, op.Value, right), op.Location);
@@ -271,12 +242,10 @@
         return left;
     }
 
-    private Expression ParseTerm()
-    {
+    private Expression ParseTerm() {
         var left = ParseFactor();
 
-        while (Match(TokenType.Plus) || Match(TokenType.Minus))
-        {
+        while (Match(TokenType.Plus) || Match(TokenType.Minus)) {
             var op = Advance();
             var right = ParseFactor();
             left = AtExpression(new BinaryExpression(left, op.Value, right), op.Location);
@@ -285,12 +254,10 @@
         return left;
     }
 
-    private Expression ParseFactor()
-    {
+    private Expression ParseFactor() {
         var left = ParseUnary();
 
-        while (Match(TokenType.Star) || Match(TokenType.Slash) || Match(TokenType.Percent))
-        {
+        while (Match(TokenType.Star) || Match(TokenType.Slash) || Match(TokenType.Percent)) {
             var op = Advance();
             var right = ParseUnary();
             left = AtExpression(new BinaryExpression(left, op.Value, right), op.Location);
@@ -299,10 +266,8 @@
         return left;
     }
 
-    private Expression ParseUnary()
-    {
-        if (Match(TokenType.Minus) || Match(TokenType.Bang))
-        {
+    private Expression ParseUnary() {
+        if (Match(TokenType.Minus) || Match(TokenType.Bang)) {
             var op = Advance();
             return AtExpression(new UnaryExpression(op.Value, ParseUnary()), op.Location);
         }
@@ -310,50 +275,42 @@
         return ParsePrimary();
     }
 
-    private Expression ParsePrimary()
-    {
-        if (Match(TokenType.LeftParen))
-        {
+    private Expression ParsePrimary() {
+        if (Match(TokenType.LeftParen)) {
             Advance(); // (
             var expression = ParseExpression();
             Consume(TokenType.RightParen, "Expected ')' after expression");
             return expression;
         }
 
-        if (Match(TokenType.Number))
-        {
+        if (Match(TokenType.Number)) {
             var token = Advance();
             var kind = token.Value.Contains('.') ? LiteralKind.Float : LiteralKind.Integer;
             return AtExpression(new LiteralExpression(token.Value, kind), token.Location);
         }
 
-        if (Match(TokenType.String))
-        {
+        if (Match(TokenType.String)) {
             var token = Advance();
             return AtExpression(new LiteralExpression(token.Value, LiteralKind.String), token.Location);
         }
 
-        if (Match(TokenType.CharLiteral))
-        {
+        if (Match(TokenType.CharLiteral)) {
             var token = Advance();
             return AtExpression(new LiteralExpression(token.Value, LiteralKind.Character), token.Location);
         }
 
-        if (Match(TokenType.True) || Match(TokenType.False))
-        {
+        if (Match(TokenType.True) || Match(TokenType.False)) {
             var token = Advance();
             return AtExpression(new LiteralExpression(token.Value, LiteralKind.Boolean), token.Location);
         }
 
-        if (Match(TokenType.Identifier))
-        {
+        if (Match(TokenType.Identifier)) {
             var name = Advance();
 
             if (Match(TokenType.LeftParen))
                 return ParseCall(name);
 
-            if (Match(TokenType.LeftSquareBrace))
-            {
+            if (Match(TokenType.LeftSquareBrace)) {
                 Advance(); // [
 
                 var x = ParseExpression();
@@ -371,16 +328,13 @@
         throw new ParserException($"Unexpected token '{Current.Value}' in expression.", Current.Location);
     }
 
-    private CallExpression ParseCall(Token name)
-    {
+    private CallExpression ParseCall(Token name) {
         Consume(TokenType.LeftParen, "Expected '(' after function name");
 
         List<Expression> arguments = new();
 
-        if (!Match(TokenType.RightParen))
-        {
-            do
-            {
+        if (!Match(TokenType.RightParen)) {
+            do {
                 arguments.Add(ParseExpression());
             } while (Match(TokenType.Comma) && Advance() != null);
         }
@@ -389,8 +343,7 @@
         return AtExpression(new CallExpression(name.Value, arguments), name.Location);
     }
 
-    private Statement ParseStatement()
-    {
+    private Statement ParseStatement() {
         if (Match(TokenType.Var) || Match(TokenType.Const))
             return ParseVarDeclaration();
 
@@ -405,8 +358,7 @@
         if (Match(TokenType.While)) return ParseWhile();
         if (Match(TokenType.Return)) return ParseReturn();
 
-        if (IsType(Current) && PeekType(1) == TokenType.Identifier)
-        {
+        if (IsType(Current) && PeekType(1) == TokenType.Identifier) {
             if (PeekType(2) == TokenType.LeftParen) return ParseFunction();
             if (PeekType(2) == TokenType.Equals) return ParseTypedVarDeclaration();
         }
@@ -416,35 +368,30 @@
 
     private Token Current => _tokens[Math.Min(_position, _tokens.Count - 1)];
 
-    private TokenType PeekType(int offset)
-    {
+    private TokenType PeekType(int offset) {
         int index = _position + offset;
         return index < _tokens.Count ? _tokens[index].Type : TokenType.EOF;
     }
 
-    private Token Advance()
-    {
+    private Token Advance() {
         if (IsAtEnd())
             throw new ParserException("Unexpected end of input.", Current.Location);
 
         return _tokens[_position++];
     }
 
-    private bool Match(TokenType type)
-    {
+    private bool Match(TokenType type) {
         return Current.Type == type;
     }
 
-    private Token Consume(TokenType type, string message)
-    {
+    private Token Consume(TokenType type, string message) {
         if (!Match(type))
             throw new ParserException($"{message}. Found '{Current.Value}'.", Current.Location);
 
         return Advance();
     }
 
-    private bool IsAtEnd()
-    {
+    private bool IsAtEnd() {
         return _position >= _tokens.Count || _tokens[_position].Type == TokenType.EOF;
     }
 }
