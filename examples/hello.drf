@@ -1,0 +1,30 @@
+// Drift example program
+// Run with: ./drift examples/hello.drf
+
+void main()
+{
+    var str name = "Drift";
+    println("Hello, %s!", name);
+    println("2 + 3 = %i (100%%)", add(2, 3));
+
+    var i32 count = 0;
+
+    while (count < 3)
+    {
+        if (count == 1)
+        {
+            println("one");
+        }
+        else
+        {
+            println(count);
+        }
+
+        count = count + 1;
+    }
+}
+
+i32 add(i32 a, i32 b)
+{
+    return a + b;
+}

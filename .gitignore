@@ -1,0 +1,21 @@
+# .NET build output
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+
+# IDEs
+.vs/
+.idea/
+.vscode/
+
+# tree-sitter tooling
+node_modules/
+tools/tree-sitter-drift/src/
+tools/tree-sitter-drift/bindings/
+tools/tree-sitter-drift/build/
+
+# Published executable
+/drift
+publish/
